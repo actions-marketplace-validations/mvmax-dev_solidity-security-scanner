@@ -1,15 +1,23 @@
 <div align="center">
   
-  # 🛡️ Solidity Security Scanner PRO
+  <img src="docs/logo.png" alt="Solidity Security Scanner PRO" width="120" />
 
-  **The Ultimate Automated Smart Contract Auditor for GitHub CI/CD**
+  # Solidity Security Scanner PRO
+
+  **The #1 Automated Smart Contract Auditor for GitHub CI/CD**
+  
+  *From install to first vulnerability caught in < 60 seconds.*
 
   [![Security Scanner CI](https://github.com/mvmax-dev/solidity-security-scanner/actions/workflows/python-app.yml/badge.svg)](https://github.com/mvmax-dev/solidity-security-scanner/actions/workflows/python-app.yml)
-  [![Marketplace](https://img.shields.io/badge/GitHub-Marketplace-blue)](https://github.com/marketplace)
-  [![Web3 Paywall](https://img.shields.io/badge/Payment-Crypto_USDC-green)](#💎-pro-version--web3-paywall)
+  [![Marketplace](https://img.shields.io/badge/GitHub-Marketplace-blue)](https://github.com/marketplace/actions/automated-smart-contract-auditor-pro)
+  [![Web3 Paywall](https://img.shields.io/badge/Payment-Crypto_USDC-green)](#-pro-version-hybrid-saas-paywall)
+  [![Enterprise](https://img.shields.io/badge/Enterprise-B2B_Ready-purple)](#-pro-version-hybrid-saas-paywall)
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![Solidity](https://img.shields.io/badge/Solidity-Security-363636?logo=solidity)](https://soliditylang.org)
+  [![Ethereum](https://img.shields.io/badge/Ethereum-Auditor-3C3C3D?logo=ethereum)](https://ethereum.org)
+  [![Solana](https://img.shields.io/badge/Solana-Rust_Scanner-9945FF?logo=solana)](https://solana.com)
 
-  *Web3 Security • DeFi Auditor • Automated Bug Bounty • Slither GitHub Action • Smart Contract Security Bot*
+  *Web3 Security • DeFi Auditor • Reentrancy Scanner • Flash Loan Defense • Solana CPI Security • Foundry Fuzzing • Smart Contract Security Bot • Gas Optimizer • MEV Protection • Slither GitHub Action*
 </div>
 
 ---
@@ -21,7 +29,6 @@ An advanced, open-source static analysis and **AI-powered vulnerability detectio
 **🔥 Time-to-First-Scan: < 60 seconds.** From installation to identifying your first critical vulnerability in under a minute.
 
 Now available as a **Zero-Friction GitHub Action**. Automatically secure every Pull Request before it hits production!
-*(Keywords: `reentrancy-scanner`, `flash-loan-defense`, `solana-cpi-security`, `foundry-fuzzing`)*
 
 ---
 
