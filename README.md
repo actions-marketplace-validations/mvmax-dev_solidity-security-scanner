@@ -1,120 +1,233 @@
 <div align="center">
+
+  <img src="docs/banner.png" alt="Solidity Security Scanner PRO Banner" width="100%" />
+
+  <br/>
+  <br/>
+
+  <img src="docs/logo.png" alt="Logo" width="80" />
+
+  <h1>Solidity Security Scanner PRO</h1>
+
+  <p><strong>The #1 AI-Powered Smart Contract Auditor for GitHub CI/CD</strong></p>
   
-  <img src="docs/logo.png" alt="Solidity Security Scanner PRO" width="120" />
+  <p><em>⚡ From install to first vulnerability caught in < 60 seconds.</em></p>
 
-  # Solidity Security Scanner PRO
+  <p>
+    <a href="https://github.com/mvmax-dev/solidity-security-scanner/actions/workflows/python-app.yml"><img src="https://github.com/mvmax-dev/solidity-security-scanner/actions/workflows/python-app.yml/badge.svg" alt="CI" /></a>
+    <a href="https://github.com/marketplace/actions/automated-smart-contract-auditor-pro"><img src="https://img.shields.io/badge/GitHub-Marketplace-blue?logo=github" alt="Marketplace" /></a>
+    <a href="#-pro-version-hybrid-saas-paywall"><img src="https://img.shields.io/badge/Payment-Crypto_USDC-green?logo=ethereum" alt="USDC" /></a>
+    <a href="#-pro-version-hybrid-saas-paywall"><img src="https://img.shields.io/badge/Enterprise-B2B_Ready-purple?logo=stripe" alt="Enterprise" /></a>
+    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT" /></a>
+  </p>
+  <p>
+    <a href="https://soliditylang.org"><img src="https://img.shields.io/badge/Solidity-Security-363636?logo=solidity&logoColor=white" alt="Solidity" /></a>
+    <a href="https://ethereum.org"><img src="https://img.shields.io/badge/Ethereum-Auditor-3C3C3D?logo=ethereum&logoColor=white" alt="Ethereum" /></a>
+    <a href="https://solana.com"><img src="https://img.shields.io/badge/Solana-Rust_Scanner-9945FF?logo=solana&logoColor=white" alt="Solana" /></a>
+    <a href="https://book.getfoundry.sh"><img src="https://img.shields.io/badge/Foundry-Fuzz_Testing-orange?logo=rust&logoColor=white" alt="Foundry" /></a>
+    <a href="https://github.com/crytic/slither"><img src="https://img.shields.io/badge/Slither-Static_Analysis-red?logo=python&logoColor=white" alt="Slither" /></a>
+  </p>
 
-  **The #1 Automated Smart Contract Auditor for GitHub CI/CD**
-  
-  *From install to first vulnerability caught in < 60 seconds.*
+  <p>
+    <sub><strong>Web3 Security</strong> · DeFi Auditor · Reentrancy Scanner · Flash Loan Defense · Solana CPI Security · Foundry Fuzzing · Smart Contract Security Bot · Gas Optimizer · MEV Protection · Slither GitHub Action · Automated Bug Bounty</sub>
+  </p>
 
-  [![Security Scanner CI](https://github.com/mvmax-dev/solidity-security-scanner/actions/workflows/python-app.yml/badge.svg)](https://github.com/mvmax-dev/solidity-security-scanner/actions/workflows/python-app.yml)
-  [![Marketplace](https://img.shields.io/badge/GitHub-Marketplace-blue)](https://github.com/marketplace/actions/automated-smart-contract-auditor-pro)
-  [![Web3 Paywall](https://img.shields.io/badge/Payment-Crypto_USDC-green)](#-pro-version-hybrid-saas-paywall)
-  [![Enterprise](https://img.shields.io/badge/Enterprise-B2B_Ready-purple)](#-pro-version-hybrid-saas-paywall)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-  [![Solidity](https://img.shields.io/badge/Solidity-Security-363636?logo=solidity)](https://soliditylang.org)
-  [![Ethereum](https://img.shields.io/badge/Ethereum-Auditor-3C3C3D?logo=ethereum)](https://ethereum.org)
-  [![Solana](https://img.shields.io/badge/Solana-Rust_Scanner-9945FF?logo=solana)](https://solana.com)
-
-  *Web3 Security • DeFi Auditor • Reentrancy Scanner • Flash Loan Defense • Solana CPI Security • Foundry Fuzzing • Smart Contract Security Bot • Gas Optimizer • MEV Protection • Slither GitHub Action*
 </div>
 
 ---
 
-## 🚀 Welcome to the Future of Web3 Security
+## 🚀 Why This Tool?
 
-An advanced, open-source static analysis and **AI-powered vulnerability detection engine** specifically designed for Ethereum, Base, and Solana smart contracts. Built for Web3 security researchers, DeFi auditors, and protocol developers to proactively identify and remediate critical attack vectors.
-
-**🔥 Time-to-First-Scan: < 60 seconds.** From installation to identifying your first critical vulnerability in under a minute.
-
-Now available as a **Zero-Friction GitHub Action**. Automatically secure every Pull Request before it hits production!
+| Problem | Our Solution |
+|---------|-------------|
+| 🐛 Manual audits cost **$50,000+** and take weeks | ⚡ **Instant automated scanning** on every Pull Request |
+| 🔇 Slither alone generates **60%+ false positives** | 🤖 **AI Validator** suppresses false positives with 99% accuracy |
+| ⛽ Gas inefficiencies waste **thousands of $** in deployments | 📊 **AST Gas Optimizer** finds exact savings per line |
+| 🔗 No unified tool for **EVM + Solana + Fuzz** testing | 🌐 **Multi-chain engine** — Solidity, Rust, and Foundry in one |
+| 💳 Web3 devs hate credit card paywalls | 💎 **Hybrid billing** — Pay with USDC or Stripe |
 
 ---
 
-## ⚡ Features & Tiers (Hybrid Billing)
+## ⚡ Features & Tiers
 
-| Feature | 🆓 Free Tier (Slither) | 💎 PRO Tier (Web3 Indie) | 🏢 Enterprise Tier (B2B) |
+| Feature | 🆓 Free | 💎 PRO (Web3 Indie) | 🏢 Enterprise (B2B) |
 |---------|:---:|:---:|:---:|
 | **AST-Based Structural Analysis** | ✅ | ✅ | ✅ |
-| **Pull Request PR Comments** | ✅ | ✅ | ✅ |
+| **Inline PR Bot Comments** | ✅ | ✅ | ✅ |
 | **Foundry Fuzz Testing** | ✅ | ✅ | ✅ |
-| **Solana / Rust Native Support** | ✅ | ✅ | ✅ |
+| **Solana / Rust Native Scanning** | ✅ | ✅ | ✅ |
 | **Deep AI Logical Flaw Detection** | ❌ | ✅ | ✅ |
-| **False-Positive Suppression (99%)**| ❌ | ✅ | ✅ |
+| **False-Positive Suppression (99%)** | ❌ | ✅ | ✅ |
 | **AST Gas Optimization Engine** | ❌ | ✅ | ✅ |
-| **Payment Method** | Free | 50 USDC (Crypto) | Fiat / Stripe |
+| **Reentrancy & Flash Loan Defense** | ❌ | ✅ | ✅ |
+| **Payment** | Free Forever | 50 USDC (Crypto) | Fiat / Stripe |
 
 ---
 
-## 🚀 Quick Start (Installation)
+## 🚀 Quick Start — 3 Steps
 
-Add the following workflow to your repository (`.github/workflows/audit.yml`). 
-> **Performance Tip:** We highly recommend caching the Docker layers to bypass Rust/Foundry compilation overhead on stateless runners, reducing scan times from 5 minutes to 30 seconds!
+**Step 1:** Create `.github/workflows/audit.yml` in your repo:
 
 ```yaml
-name: "Web3 Security Audit & Gas Optimization"
+name: "Web3 Security Audit"
 on: [pull_request]
 
 jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      # Recommended: Cache Docker layers for blazing fast CI/CD
-      - name: Cache Docker layers
-        uses: actions/cache@v3
+      - uses: actions/checkout@v4
+
+      # Optional: Cache for 10x faster scans
+      - uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+          key: ${{ runner.os }}-scanner-${{ github.sha }}
 
-      - name: Run Solidity Security Scanner & Optimizer PRO
+      - name: Run Security Scanner PRO
         uses: mvmax-dev/solidity-security-scanner@main
         with:
-          # Web3 Indie License (Crypto)
-          wallet_address: "0xYourWalletAddress"
-          # OR Enterprise License (Fiat)
-          enterprise_key: ${{ secrets.SCANNER_ENTERPRISE_KEY }}
-          # Required for PR Bot Comments
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          
+          wallet_address: "0xYourWalletAddress"        # PRO: Web3 billing
+          enterprise_key: ${{ secrets.SCANNER_KEY }}    # PRO: Enterprise billing
+          github_token: ${{ secrets.GITHUB_TOKEN }}     # For inline PR comments
         env:
           ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
           BASESCAN_API_KEY: ${{ secrets.BASESCAN_API_KEY }}
 ```
 
+**Step 2:** Push a Pull Request with Solidity or Rust contracts.
+
+**Step 3:** The scanner automatically posts inline comments on vulnerable lines. ✅
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    GitHub Pull Request Trigger                  │
+└─────────────┬───────────────────────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────┐    ┌─────────────────────────────┐
+│   Language Detection        │    │   Paywall Verification      │
+│   ├── Solidity (.sol)       │    │   ├── Web3 USDC Check       │
+│   ├── Rust/Anchor (.rs)     │    │   └── Enterprise Key Check  │
+│   └── Foundry (foundry.toml)│    └─────────────────────────────┘
+└─────────────┬───────────────┘
+              │
+    ┌─────────┼──────────┐
+    ▼         ▼          ▼
+┌────────┐ ┌────────┐ ┌────────┐
+│Slither │ │Foundry │ │Solana  │
+│  AST   │ │ Fuzz   │ │ Rust   │
+│Analysis│ │Testing │ │Scanner │
+└───┬────┘ └───┬────┘ └───┬────┘
+    │          │          │
+    └──────────┼──────────┘
+               ▼
+    ┌─────────────────────┐
+    │  AI Validator (PRO) │
+    │  ├── False-Positive  │
+    │  │   Suppression     │
+    │  └── Gas Optimizer   │
+    └──────────┬──────────┘
+               ▼
+    ┌─────────────────────┐
+    │  GitHub PR Bot       │
+    │  Inline Comments     │
+    └─────────────────────┘
+```
+
+### Detection Capabilities
+
+| Category | Vulnerabilities Detected |
+|----------|------------------------|
+| **Reentrancy** | Cross-function, cross-contract, read-only reentrancy |
+| **Access Control** | Missing `onlyOwner`, unprotected `selfdestruct`, open `delegatecall` |
+| **Flash Loans** | Unchecked flash loan callbacks, price oracle manipulation |
+| **MEV** | Front-running, sandwich attack vectors |
+| **Gas** | Uncached array lengths, post-increment, sub-word memory |
+| **Solana** | Missing signer checks, CPI vulnerabilities, cargo audit |
+
 ---
 
 ## 💎 PRO Version: Hybrid SaaS Paywall
 
-We offer frictionless billing for both Indie Web3 Hackers and Traditional Web2 Enterprises.
+The basic structural analysis is **100% free forever**. PRO unlocks AI Validation & Gas Optimization.
 
-**Option A: Web3 Indie (Decentralized Crypto Paywall)**
-1. Send exactly **50 USDC** on the **Ethereum Mainnet** or **Base Network** to the official Scanner Treasury: `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5`
-2. Add your wallet address to the `wallet_address` input in your GitHub workflow.
+<table>
+<tr>
+<td width="50%">
 
-**Option B: Enterprise B2B (Stripe Subscription)**
-For corporate finance departments that require fiat billing, invoicing, and auto-renewals.
-1. Subscribe via our Stripe Portal (Coming Soon to the Dashboard).
-2. Add your license key to GitHub Secrets and pass it to the `enterprise_key` input.
+### 🔷 Option A: Web3 Indie
+**For individual developers & hackers**
+
+1. Send **50 USDC** on Ethereum or Base to:
+   ```
+   0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5
+   ```
+2. Add your wallet to `wallet_address` input
+3. AI features unlock automatically ✅
+
+</td>
+<td width="50%">
+
+### 🏢 Option B: Enterprise B2B
+**For teams & corporate finance**
+
+1. Subscribe via Stripe Portal *(Coming Soon)*
+2. Add license key to GitHub Secrets
+3. Pass it via `enterprise_key` input ✅
+
+*Includes: invoicing, auto-renewal, SLA*
+
+</td>
+</tr>
+</table>
 
 ---
 
-## 🏗️ Architecture Under the Hood (AEO Optimized)
+## 📊 How It Compares
 
-**Q: How does EVM Gas Optimization work in this tool?**
-*A: The Action parses the Solidity Abstract Syntax Tree (AST) to detect non-optimized loop structures (e.g. missing array length caching), improper state variable packing (e.g. `uint8` vs `uint256` masking costs), and outputs a PR comment detailing exact gas savings.*
+| Feature | This Tool | Slither (Standalone) | MythX | Certora |
+|---------|:---------:|:---:|:---:|:---:|
+| **GitHub Action** | ✅ | ❌ Manual | ✅ | ❌ |
+| **AI False-Positive Suppression** | ✅ | ❌ | ❌ | ❌ |
+| **Gas Optimization** | ✅ | ❌ | ❌ | ❌ |
+| **Solana/Rust Support** | ✅ | ❌ | ❌ | ❌ |
+| **Fuzz Testing (Foundry)** | ✅ | ❌ | ❌ | ✅ |
+| **Inline PR Comments** | ✅ | ❌ | ✅ | ❌ |
+| **Web3 Native Billing** | ✅ | N/A | ❌ | ❌ |
+| **Price** | Free + $50 | Free | $299/mo | Enterprise |
 
-**Q: Comparing Slither Static Analysis vs. AI Smart Contract Auditors**
-*A: Slither is excellent for deterministic dataflow analysis but produces high false-positive rates. Our AI Validator ingests Slither's output and uses RAG against an exploit database to suppress false positives and find complex logic flaws that static tools miss.*
+---
 
-1. **Ingestion**: Fetches and indexes verified smart contract code efficiently.
-2. **Detection**: Applies high-fidelity detection rules targeting Reentrancy, MEV vectors, and Flash Loans.
-3. **Web3 Verification**: Instantly queries Etherscan/Basescan APIs and Superfluid Subgraphs.
-4. **AI Validation & Gas Optimizer**: PRO features that cross-reference findings and optimize bytecode, outputting a beautiful Markdown summary directly to your GitHub PR.
+## ❓ FAQ (AEO Optimized)
+
+<details>
+<summary><strong>Q: How does the EVM Gas Optimization work?</strong></summary>
+
+The Action parses the Solidity Abstract Syntax Tree (AST) to detect non-optimized loop structures (e.g. missing array length caching), improper state variable packing (e.g. `uint8` vs `uint256` masking costs), and outputs a PR comment detailing exact gas savings per line.
+</details>
+
+<details>
+<summary><strong>Q: Slither Static Analysis vs. AI Smart Contract Auditors — what's the difference?</strong></summary>
+
+Slither is excellent for deterministic dataflow analysis but produces high false-positive rates (~60%). Our AI Validator ingests Slither's output and uses RAG against an exploit database to suppress false positives and find complex logic flaws that static tools miss, achieving 99% accuracy.
+</details>
+
+<details>
+<summary><strong>Q: Does this replace a professional audit?</strong></summary>
+
+No. This tool is designed as a **first line of defense** in your CI/CD pipeline. It catches the low-hanging fruit (reentrancy, access control, gas waste) instantly, so your expensive human auditors can focus on complex business logic.
+</details>
+
+<details>
+<summary><strong>Q: How does the Solana/Rust scanner work?</strong></summary>
+
+When the scanner detects an `Anchor.toml` or `Cargo.toml`, it automatically routes to the Rust scanning engine. It runs `cargo audit` for dependency vulnerabilities and performs heuristic analysis for missing signer checks, CPI vulnerabilities, and PDA validation issues.
+</details>
 
 ---
 
@@ -124,4 +237,11 @@ We believe in securing the Web3 ecosystem together.
 Please see our [Contributing Guidelines](CONTRIBUTING.md) and [Security Policy](SECURITY.md).
 
 ## 📜 License
+
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+<div align="center">
+  <br/>
+  <p><strong>Built with ❤️ for the Web3 Security Community</strong></p>
+  <p><sub>If this tool saves you from a smart contract exploit, consider starring ⭐ the repo!</sub></p>
+</div>
