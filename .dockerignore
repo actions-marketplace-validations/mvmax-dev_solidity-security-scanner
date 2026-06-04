@@ -1,0 +1,14 @@
+.git
+.gitignore
+__pycache__
+.pytest_cache
+*.pyc
+*.pyo
+*.egg-info
+.env
+docs/
+dashboard/node_modules/
+dashboard/.next/
+*.md
+!README.md
+LICENSE

@@ -1,5 +1,9 @@
 FROM python:3.11-slim
 
+LABEL maintainer="Maxwell VOSS"
+LABEL description="AI-powered smart contract scanner for Ethereum, Base & Solana"
+LABEL version="3.2"
+
 # Install solc and system dependencies
 RUN apt-get update && apt-get install -y \
     software-properties-common \
@@ -11,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 # Install python dependencies
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
-RUN pip install --no-cache-dir web3 slither-analyzer solc-select
+RUN pip install --no-cache-dir slither-analyzer solc-select
 
 # Install common solc versions for Slither
 RUN solc-select install 0.8.20 && \
@@ -35,8 +39,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
 COPY . /app
 WORKDIR /app
 
-# The entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
+

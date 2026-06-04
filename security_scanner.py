@@ -645,7 +645,7 @@ def scan_contract(contract_address: str, workspace_override: str = None) -> None
         if solana_scanner.is_solana:
             _log("INFO", "Solana/Rust project detected! Routing to Solana Scanner engine...")
             sol_res = solana_scanner.scan()
-            sys.stdout.write(json.dumps(sol_res) + "\\n")
+            sys.stdout.write(json.dumps(sol_res) + "\n")
             sys.stdout.flush()
             return
     except Exception as e:
@@ -878,29 +878,33 @@ def scan_contract(contract_address: str, workspace_override: str = None) -> None
         
         # Heuristic findings
         for finding in heuristic_findings:
-            if finding.severity in ["Critical", "High"] and finding.line_number > 0 and posted_comments < 15:
-                body = f"**[{finding.severity}] {finding.title}**\\n{finding.description}"
-                commenter.post_inline_comment(finding.file_path, finding.line_number, body)
+            sev_str = finding.severity.value if hasattr(finding.severity, 'value') else str(finding.severity)
+            if sev_str in ["Critical", "High"] and finding.line_number > 0 and posted_comments < 15:
+                body = f"**[{sev_str}] {finding.name}**\n{finding.description}"
+                commenter.post_inline_comment(finding.filepath, finding.line_number, body)
                 posted_comments += 1
                 
         # Slither findings
         for sf in slither_raw:
-            if sf.mapped_severity in ["Critical", "High"] and sf.lines and posted_comments < 15:
-                # Use the first line of the first element
-                line_no = sf.lines[0]
+            sev = getattr(sf, 'mapped_severity', getattr(sf, 'severity', 'Low'))
+            lines = getattr(sf, 'lines', [])
+            if sev in ["Critical", "High"] and lines and posted_comments < 15:
+                line_no = lines[0]
                 if line_no > 0:
-                    body = f"**[{sf.mapped_severity}] {sf.check_name}**\\n{sf.description}"
-                    # Slither file path is usually relative
-                    commenter.post_inline_comment(sf.file_path, line_no, body)
+                    check = getattr(sf, 'check_name', getattr(sf, 'check', 'Unknown'))
+                    desc = getattr(sf, 'description', '')
+                    fpath = getattr(sf, 'file_path', getattr(sf, 'filename', ''))
+                    body = f"**[{sev}] {check}**\n{desc}"
+                    commenter.post_inline_comment(fpath, line_no, body)
                     posted_comments += 1
                     
         # General summary comment
         if total_findings > 0:
-            summary_body = f"The Web3 AI Scanner found **{total_findings}** issues.\\n"
-            summary_body += f"- Critical: {merged_counts.get('Critical', 0)}\\n"
-            summary_body += f"- High: {merged_counts.get('High', 0)}\\n"
+            summary_body = f"The Web3 AI Scanner found **{total_findings}** issues.\n"
+            summary_body += f"- Critical: {merged_counts.get('Critical', 0)}\n"
+            summary_body += f"- High: {merged_counts.get('High', 0)}\n"
             if not has_pro:
-                summary_body += "\\n🔒 **Unlock AI False-Positive Suppression & Gas Optimizer** by sending 50 USDC to `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5`."
+                summary_body += "\n🔒 **Unlock AI False-Positive Suppression & Gas Optimizer** by sending 50 USDC to `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5`."
             commenter.post_general_comment(summary_body)
             
     except Exception as e:

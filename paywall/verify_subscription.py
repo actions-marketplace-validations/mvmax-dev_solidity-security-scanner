@@ -29,7 +29,7 @@ NETWORKS = {
     }
 }
 
-def verify_subscription(user_wallet: str) -> bool:
+def verify_subscription(user_wallet: str, rpc_url: str = "https://mainnet.base.org") -> bool:
     """
     Verifies if `user_wallet` has sent at least `REQUIRED_AMOUNT` of USDC
     to `OWNER_WALLET` within the last 30 days on either Ethereum or Base.

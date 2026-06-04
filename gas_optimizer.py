@@ -9,6 +9,7 @@ class GasOptimizer:
 
     def optimize_contract(self, contract_path: str) -> Dict[str, Any]:
         """Runs heuristic analysis to find gas optimization opportunities."""
+        self.gas_findings = []  # Reset findings for each contract
         if not os.path.exists(contract_path):
             return {"status": "error", "message": "File not found"}
             
