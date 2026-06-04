@@ -1,17 +1,8 @@
 <div align="center">
-
-  <img src="docs/banner.png" alt="Solidity Security Scanner PRO Banner" width="100%" />
-
-  <br/>
-  <br/>
-
-  <img src="docs/logo.png" alt="Logo" width="80" />
-
-  <h1>Solidity Security Scanner PRO</h1>
-
-  <p><strong>The #1 AI-Powered Smart Contract Auditor for GitHub CI/CD</strong></p>
-  
-  <p><em>⚡ From install to first vulnerability caught in < 60 seconds.</em></p>
+<img src="docs/banner.png" alt="Solidity Security Scanner PRO" width="100%" />
+<br/>
+<p><strong>The #1 AI-Powered Smart Contract Auditor for GitHub CI/CD</strong></p>
+<p><em>⚡ From install to first vulnerability caught in < 60 seconds.</em></p>
 
   <p>
     <a href="https://github.com/mvmax-dev/solidity-security-scanner/actions/workflows/python-app.yml"><img src="https://github.com/mvmax-dev/solidity-security-scanner/actions/workflows/python-app.yml/badge.svg" alt="CI" /></a>
