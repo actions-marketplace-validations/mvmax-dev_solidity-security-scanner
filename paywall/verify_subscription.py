@@ -85,7 +85,27 @@ def verify_subscription(user_wallet: str) -> bool:
         except Exception as e:
             print(f"[PAYWALL] ❌ API Error on {network_name}: {e}")
 
-    print(f"[PAYWALL] 🚫 No active subscription found for {user_wallet}.")
+    # --- SUPERFLUID STREAM CHECK (Continuous SaaS Subscription) ---
+    print(f"[PAYWALL] 🌊 Checking Superfluid Continuous Streams for {user_wallet}...")
+    try:
+        superfluid_subgraph = "https://api.thegraph.com/subgraphs/name/superfluid-finance/protocol-v1-base"
+        query = """
+        query($receiver: String!, $sender: String!) {
+            streams(where: {receiver: $receiver, sender: $sender, currentFlowRate_gt: "0"}) {
+                currentFlowRate
+                token { symbol }
+            }
+        }
+        """
+        sf_res = requests.post(superfluid_subgraph, json={"query": query, "variables": {"receiver": OWNER_WALLET, "sender": user_wallet}}, timeout=5)
+        sf_data = sf_res.json()
+        if sf_data.get("data", {}).get("streams"):
+            print(f"[PAYWALL] ✅ SUPERFLUID STREAM DETECTED! Active continuous subscription found.")
+            return True
+    except Exception as e:
+        print(f"[PAYWALL] ⚠️ Superfluid verification skipped: {e}")
+
+    print(f"[PAYWALL] 🚫 No active subscription or continuous stream found for {user_wallet}.")
     print(f"[PAYWALL] Please send 50 USDC to {OWNER_WALLET} on Base or Ethereum.")
     return False
 

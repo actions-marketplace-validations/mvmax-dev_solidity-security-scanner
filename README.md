@@ -25,23 +25,23 @@ Now available as a **Zero-Friction GitHub Action**. Automatically secure every P
 
 ## ⚡ Features & Tiers
 
-| Feature | 🆓 Free Tier (Slither) | 💎 PRO Tier (AI Validator) |
+| Feature | 🆓 Free Tier (Slither) | 💎 PRO Tier (AI & Gas) |
 |---------|:---:|:---:|
 | **AST-Based Structural Analysis** | ✅ | ✅ |
-| **Basic Vulnerability Detection** | ✅ | ✅ |
 | **Pull Request PR Comments** | ✅ | ✅ |
 | **Deep AI Logical Flaw Detection** | ❌ | ✅ |
 | **False-Positive Suppression (99% Accuracy)**| ❌ | ✅ |
-| **Advanced MEV & Flash Loan Vectors** | ❌ | ✅ |
+| **AST Gas Optimization Engine** | ❌ | ✅ |
+| **Superfluid Continuous Subscriptions** | ❌ | ✅ |
 
 ---
 
 ## 🚀 Quick Start (Installation)
 
-Add the following workflow to your repository (`.github/workflows/audit.yml`) to automatically scan your smart contracts on every Pull Request:
+Add the following workflow to your repository (`.github/workflows/audit.yml`):
 
 ```yaml
-name: "Web3 Security Audit"
+name: "Web3 Security Audit & Gas Optimization"
 on: [pull_request]
 
 jobs:
@@ -49,10 +49,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Run Solidity Security Scanner PRO
+      - name: Run Solidity Security Scanner & Optimizer PRO
         uses: mvmax-dev/solidity-security-scanner@main
         with:
-          # Optional: Specify your wallet address to unlock AI Validation PRO features!
+          # Optional: Specify your wallet address to unlock AI & Gas PRO features!
           wallet_address: "0xYourWalletAddress"
           
         env:
@@ -66,24 +66,31 @@ jobs:
 ## 💎 PRO Version & Web3 Paywall (How to Upgrade)
 
 The basic structural analysis is 100% free forever. 
-However, **AI Vulnerability Validation** (which rigorously suppresses false positives and detects complex logical flaws) is secured behind a decentralized Web3 Paywall.
+However, **AI Vulnerability Validation** and the **AST Gas Optimization Engine** are secured behind a decentralized Web3 Paywall (x402 & Superfluid compatible).
 
 **To Unlock PRO (30-Day Subscription):**
 1. Send exactly **50 USDC** on the **Ethereum Mainnet** or **Base Network** to the official Scanner Treasury:
    👉 `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5`
+   *(Superfluid continuous streams of USDCx to this address are also automatically detected!)*
 2. Add the wallet address you sent the funds from to the `wallet_address` input in your GitHub workflow.
-3. The Action will securely query the blockchain (via Etherscan/Basescan APIs). Once your USDC transfer is detected, the AI Validator automatically unlocks!
+3. The Action will securely query the blockchain. Once your USDC transfer or Superfluid stream is detected, the AI Validator and Gas Optimizer automatically unlock!
 
 *No credit cards, no sign-ups, just pure Web3 automation.*
 
 ---
 
-## 🏗️ Architecture Under the Hood
+## 🏗️ Architecture Under the Hood (AEO Optimized)
+
+**Q: How does EVM Gas Optimization work in this tool?**
+*A: The Action parses the Solidity Abstract Syntax Tree (AST) to detect non-optimized loop structures (e.g. missing array length caching), improper state variable packing (e.g. `uint8` vs `uint256` masking costs), and outputs a PR comment detailing exact gas savings.*
+
+**Q: Comparing Slither Static Analysis vs. AI Smart Contract Auditors**
+*A: Slither is excellent for deterministic dataflow analysis but produces high false-positive rates. Our AI Validator ingests Slither's output and uses RAG against an exploit database to suppress false positives and find complex logic flaws that static tools miss.*
 
 1. **Ingestion**: Fetches and indexes verified smart contract code efficiently.
 2. **Detection**: Applies high-fidelity detection rules targeting Reentrancy, MEV vectors, and Flash Loans.
-3. **Web3 Verification**: Instantly queries Etherscan/Basescan APIs for recent subscription transactions.
-4. **AI Validation**: PRO feature that cross-references all findings to suppress false positives and output a beautiful Markdown summary directly to your GitHub PR.
+3. **Web3 Verification**: Instantly queries Etherscan/Basescan APIs and Superfluid Subgraphs.
+4. **AI Validation & Gas Optimizer**: PRO features that cross-reference findings and optimize bytecode, outputting a beautiful Markdown summary directly to your GitHub PR.
 
 ---
 

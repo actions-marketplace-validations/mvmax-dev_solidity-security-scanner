@@ -766,7 +766,7 @@ def scan_contract(contract_address: str) -> None:
         has_pro = False
 
     if has_pro:
-        output["ai_validation"] = "✅ PRO feature unlocked! Running AI Validation..."
+        output["ai_validation"] = "✅ PRO feature unlocked! Running AI Validation & Gas Optimizer..."
         try:
             from vulnerability_validator import VulnerabilityValidator
             validator = VulnerabilityValidator(workspace)
@@ -774,9 +774,21 @@ def scan_contract(contract_address: str) -> None:
             output["ai_validation_results"] = val_res
         except Exception as e:
             output["ai_validation_error"] = str(e)
+            
+        # --- GAS OPTIMIZER ENGINE ---
+        try:
+            from gas_optimizer import GasOptimizer
+            optimizer = GasOptimizer(workspace)
+            # Find the path to the contract to pass to the optimizer
+            scan_path_local, _ = _resolve_contract_path(workspace, contract_address)
+            gas_res = optimizer.optimize_contract(scan_path_local)
+            output["gas_optimization"] = gas_res
+        except Exception as e:
+            output["gas_optimization_error"] = str(e)
+            
     else:
-        output["ai_validation"] = "🔒 AI Validation is locked. Pay 50 USDC on Base Network to unlock Deep AI Audits."
-        output["payment_link"] = "https://pay.mvmax-dev.org"
+        output["ai_validation"] = "🔒 AI Validation & Gas Optimization are locked."
+        output["payment_link"] = "Send 50 USDC to 0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5"
         output["wallet_required"] = "Set WALLET_ADDRESS in Action inputs to verify your subscription."
         
     sys.stdout.write(json.dumps(output) + "\n")
@@ -797,13 +809,21 @@ def scan_contract(contract_address: str) -> None:
                 f.write(f"| :---: | :---: | :---: | :---: |\n")
                 f.write(f"| {merged_counts.get('Critical', 0)} | {merged_counts.get('High', 0)} | {merged_counts.get('Medium', 0)} | {merged_counts.get('Low', 0)} |\n\n")
                 
-                f.write(f"### 🤖 AI Validation (PRO)\n")
+                f.write(f"### 🤖 AI Validation & Gas Optimizer (PRO)\n")
                 if has_pro:
-                    f.write(f"✅ **Subscription Verified.** AI Validator successfully executed.\n")
-                    f.write(f"*(Check detailed JSON artifacts for in-depth AI context and false-positive suppression data).*\n")
+                    f.write(f"✅ **Superfluid/x402 Subscription Verified.** AI Validator successfully executed.\n")
+                    f.write(f"*(Check detailed JSON artifacts for in-depth AI context and false-positive suppression data).*\n\n")
+                    
+                    gas_data = output.get("gas_optimization", {})
+                    if gas_data.get("status") == "success":
+                        f.write(f"#### ⛽ Gas Savings Identified\n")
+                        f.write(f"- **Estimated Savings**: `{gas_data.get('estimated_gas_saved', '0 Gas')}`\n")
+                        f.write(f"- **Optimization Opportunities**: {gas_data.get('findings_count', 0)}\n")
+                        for find in gas_data.get('findings', []):
+                            f.write(f"  - `Line {find['line']}`: {find['issue']} -> *{find['recommendation']}*\n")
                 else:
-                    f.write(f"🔒 **AI Validation Locked**\n")
-                    f.write(f"> Unlock the full power of Deep AI Audits to suppress false positives and find logical exploits.\n")
+                    f.write(f"🔒 **AI Validation & Gas Optimization Locked**\n")
+                    f.write(f"> Unlock the full power of Deep AI Audits and AST Gas Optimization to save thousands on deployment costs.\n")
                     f.write(f"> Send **50 USDC** on the Base or Ethereum network to `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5` and add your wallet address to this Action's inputs.\n")
         except Exception as e:
             _log("ERROR", f"Failed to write GitHub Step Summary: {e}")
