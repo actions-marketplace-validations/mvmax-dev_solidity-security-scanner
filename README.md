@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/Awesome-shield.svg" alt="Security Shield" width="120" />
   
   # 🛡️ Solidity Security Scanner PRO
 
