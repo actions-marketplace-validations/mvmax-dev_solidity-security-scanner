@@ -778,9 +778,35 @@ def scan_contract(contract_address: str) -> None:
         output["ai_validation"] = "🔒 AI Validation is locked. Pay 50 USDC on Base Network to unlock Deep AI Audits."
         output["payment_link"] = "https://pay.mvmax-dev.org"
         output["wallet_required"] = "Set WALLET_ADDRESS in Action inputs to verify your subscription."
+        
     sys.stdout.write(json.dumps(output) + "\n")
     sys.stdout.flush()
 
+    # --- GITHUB STEP SUMMARY (PREMIUM UX) ---
+    step_summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
+    if step_summary_file:
+        try:
+            with open(step_summary_file, "a", encoding="utf-8") as f:
+                f.write(f"## 🛡️ Solidity Security Scanner PRO Report\n\n")
+                f.write(f"**Target**: `{contract_address}`\n")
+                f.write(f"**Risk Score**: `{final_risk}`\n")
+                f.write(f"**Files Scanned**: {files_scanned} | **Total Lines**: {total_lines}\n\n")
+                
+                f.write(f"### 📊 Severity Breakdown\n")
+                f.write(f"| Critical | High | Medium | Low |\n")
+                f.write(f"| :---: | :---: | :---: | :---: |\n")
+                f.write(f"| {merged_counts.get('Critical', 0)} | {merged_counts.get('High', 0)} | {merged_counts.get('Medium', 0)} | {merged_counts.get('Low', 0)} |\n\n")
+                
+                f.write(f"### 🤖 AI Validation (PRO)\n")
+                if has_pro:
+                    f.write(f"✅ **Subscription Verified.** AI Validator successfully executed.\n")
+                    f.write(f"*(Check detailed JSON artifacts for in-depth AI context and false-positive suppression data).*\n")
+                else:
+                    f.write(f"🔒 **AI Validation Locked**\n")
+                    f.write(f"> Unlock the full power of Deep AI Audits to suppress false positives and find logical exploits.\n")
+                    f.write(f"> Send **50 USDC** on the Base or Ethereum network to `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5` and add your wallet address to this Action's inputs.\n")
+        except Exception as e:
+            _log("ERROR", f"Failed to write GitHub Step Summary: {e}")
 
 if __name__ == "__main__":
     import argparse

@@ -1,48 +1,97 @@
 import os
 import sys
-import json
-from web3 import Web3
+import time
+import requests
 
-# Define the expected payment contract (e.g., an ERC20 token or an NFT subscription contract on Base)
-PAYMENT_CONTRACT_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913" # USDC on Base (example)
-REQUIRED_BALANCE = 50 * 10**6 # 50 USDC (6 decimals)
-MY_WALLET = "0x0000000000000000000000000000000000000000" # Replace with real dev wallet
+# -------------------------------------------------------------------
+# WEB3 SAAS CONFIGURATION
+# -------------------------------------------------------------------
+# The wallet where you receive subscriptions
+OWNER_WALLET = "0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5".lower()
 
-# Minimal ERC20 ABI for balance check
-ERC20_ABI = json.loads('[{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"type":"function"}]')
+# Required payment amount: 50 USDC (USDC has 6 decimals, so 50 * 10^6)
+REQUIRED_AMOUNT = 50 * (10**6)
 
-def verify_subscription(user_wallet: str, rpc_url: str) -> bool:
-    if not user_wallet or not rpc_url:
-        print("[PAYWALL] No wallet or RPC provided. Access to AI Validation PRO denied.")
+# Subscription duration in seconds (30 days)
+SUBSCRIPTION_DURATION = 30 * 24 * 60 * 60
+
+# We support Ethereum (Mainnet) and Base
+NETWORKS = {
+    "ethereum": {
+        "api_url": "https://api.etherscan.io/api",
+        "usdc_contract": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "env_key": "ETHERSCAN_API_KEY"
+    },
+    "base": {
+        "api_url": "https://api.basescan.org/api",
+        "usdc_contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "env_key": "BASESCAN_API_KEY"
+    }
+}
+
+def verify_subscription(user_wallet: str) -> bool:
+    """
+    Verifies if `user_wallet` has sent at least `REQUIRED_AMOUNT` of USDC
+    to `OWNER_WALLET` within the last 30 days on either Ethereum or Base.
+    """
+    if not user_wallet:
+        print("[PAYWALL] ❌ No wallet address provided. Access to AI Validation PRO denied.")
         return False
+        
+    user_wallet = user_wallet.lower()
+    current_time = int(time.time())
 
-    try:
-        w3 = Web3(Web3.HTTPProvider(rpc_url))
-        if not w3.is_connected():
-            print(f"[PAYWALL] Failed to connect to RPC: {rpc_url}")
-            return False
+    for network_name, config in NETWORKS.items():
+        api_key = os.environ.get(config["env_key"])
+        if not api_key:
+            print(f"[PAYWALL] ⚠️ Warning: No API key found for {network_name} ({config['env_key']}). Skipping network.")
+            continue
+            
+        print(f"[PAYWALL] 🔍 Checking {network_name.capitalize()} for subscription payments...")
         
-        user_wallet = w3.to_checksum_address(user_wallet)
-        contract = w3.eth.contract(address=w3.to_checksum_address(PAYMENT_CONTRACT_ADDRESS), abi=ERC20_ABI)
+        # Query ERC20 Token Transfers for the User's Wallet
+        params = {
+            "module": "account",
+            "action": "tokentx",
+            "contractaddress": config["usdc_contract"],
+            "address": user_wallet,
+            "page": 1,
+            "offset": 100, # Check the last 100 transfers
+            "startblock": 0,
+            "endblock": 99999999,
+            "sort": "desc",
+            "apikey": api_key
+        }
         
-        balance = contract.functions.balanceOf(user_wallet).call()
-        
-        if balance >= REQUIRED_BALANCE:
-            print(f"[PAYWALL] Subscription verified for {user_wallet}. AI Validation PRO unlocked!")
-            return True
-        else:
-            print(f"[PAYWALL] Wallet {user_wallet} does not have the required Pro subscription balance.")
-            print(f"[PAYWALL] Required: {REQUIRED_BALANCE / 10**6} USDC. Found: {balance / 10**6} USDC.")
-            return False
-    except Exception as e:
-        print(f"[PAYWALL] Verification error: {e}")
-        return False
+        try:
+            response = requests.get(config["api_url"], params=params, timeout=10)
+            data = response.json()
+            
+            if data.get("status") == "1" and data.get("result"):
+                transactions = data["result"]
+                for tx in transactions:
+                    # Check if transaction is a transfer to the owner wallet
+                    if tx.get("to", "").lower() == OWNER_WALLET:
+                        # Check amount
+                        value = int(tx.get("value", 0))
+                        # Check time
+                        tx_time = int(tx.get("timeStamp", 0))
+                        
+                        if value >= REQUIRED_AMOUNT and (current_time - tx_time) <= SUBSCRIPTION_DURATION:
+                            print(f"[PAYWALL] ✅ VALID SUBSCRIPTION FOUND on {network_name.capitalize()}!")
+                            print(f"          Tx Hash: {tx.get('hash')}")
+                            print(f"          Amount: {value / 10**6} USDC")
+                            return True
+        except Exception as e:
+            print(f"[PAYWALL] ❌ API Error on {network_name}: {e}")
+
+    print(f"[PAYWALL] 🚫 No active subscription found for {user_wallet}.")
+    print(f"[PAYWALL] Please send 50 USDC to {OWNER_WALLET} on Base or Ethereum.")
+    return False
 
 if __name__ == "__main__":
     wallet = os.environ.get("WALLET_ADDRESS", "")
-    rpc = os.environ.get("RPC_URL", "https://mainnet.base.org")
-    
-    if verify_subscription(wallet, rpc):
+    if verify_subscription(wallet):
         sys.exit(0) # Success
     else:
         sys.exit(1) # Paywall blocked
