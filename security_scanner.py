@@ -619,7 +619,7 @@ def _resolve_contract_path(workspace: str, address: str) -> tuple[str, str]:
 
 
 @no_dry_run
-def scan_contract(contract_address: str) -> None:
+def scan_contract(contract_address: str, workspace_override: str = None) -> None:
     """Hybrid scanner: Slither (primary) + Heuristic (secondary).
 
     Runs Slither for dataflow analysis, merges with regex heuristics,
@@ -627,13 +627,16 @@ def scan_contract(contract_address: str) -> None:
     """
     start_time = time.monotonic()
 
-    try:
-        from lib.workspace import resolve_workspace
-        workspace = resolve_workspace()
-    except ImportError:
-        workspace = os.environ.get("OPENCLAW_WORKSPACE") or os.path.expanduser("~/.openclaw/workspace")
-        if not os.path.exists(workspace):
-            workspace = os.getcwd()
+    if workspace_override:
+        workspace = workspace_override
+    else:
+        try:
+            from lib.workspace import resolve_workspace
+            workspace = resolve_workspace()
+        except ImportError:
+            workspace = os.environ.get("OPENCLAW_WORKSPACE") or os.path.expanduser("~/.openclaw/workspace")
+            if not os.path.exists(workspace):
+                workspace = os.getcwd()
 
     _log("INFO", f"Security Scanner v1.0 (Slither Hybrid) — {datetime.now(timezone.utc).isoformat()}")
     _log("INFO", f"Target: {contract_address}")
@@ -831,6 +834,14 @@ def scan_contract(contract_address: str) -> None:
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Scan Solidity contracts (V1.0 Slither Hybrid).")
-    parser.add_argument("--address", required=True, help="Contract address to scan")
+    parser.add_argument("--address", help="Contract address or path to scan")
+    parser.add_argument("--workspace", help="Workspace path to scan everything")
     args = parser.parse_args()
-    scan_contract(args.address)
+    
+    if args.workspace and not args.address:
+        scan_contract("ALL", workspace_override=args.workspace)
+    elif args.address:
+        scan_contract(args.address)
+    else:
+        print("Must provide either --address or --workspace")
+        sys.exit(1)
