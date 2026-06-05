@@ -1,0 +1,38 @@
+[project]
+name = "solidity-security-scanner"
+version = "2.0.0"
+description = "AI-powered smart contract security scanner for Solidity, Rust, and Solana"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+authors = [
+    {name = "Maxwell VOSS"}
+]
+keywords = [
+    "solidity", "ethereum", "smart-contracts", "security", "blockchain",
+    "defi", "web3", "solana", "rust", "github-actions", "vulnerability-scanner",
+    "static-analysis", "slither", "foundry", "gas-optimization", "reentrancy"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+]
+
+[project.urls]
+Homepage = "https://github.com/mvmax-dev/solidity-security-scanner"
+Repository = "https://github.com/mvmax-dev/solidity-security-scanner"
+Issues = "https://github.com/mvmax-dev/solidity-security-scanner/issues"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "-v --tb=short"
+
+[tool.flake8]
+max-line-length = 127
+max-complexity = 10
+exclude = [".git", "__pycache__", "dashboard", "venv"]

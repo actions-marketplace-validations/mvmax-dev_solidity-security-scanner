@@ -51,6 +51,38 @@ class GasOptimizer:
                     })
                     total_gas_saved += 25
 
+            # 4. Calldata vs Memory for external functions
+            if re.search(r'function\s+\w+\s*\([^)]*\bmemory\b[^)]*\)\s*(external|public)', line):
+                self.gas_findings.append({
+                    "line": line_num,
+                    "issue": "Memory parameter in external function",
+                    "recommendation": "Use 'calldata' instead of 'memory' for external function parameters to save gas on copy operations.",
+                    "gas_saved_est": 200
+                })
+                total_gas_saved += 200
+
+            # 5. Constants that should be immutable
+            if re.search(r'(public|private|internal)\s+(address|uint256|bytes32)\s+\w+\s*=\s*', line):
+                if 'constant' not in line and 'immutable' not in line:
+                    self.gas_findings.append({
+                        "line": line_num,
+                        "issue": "State variable could be immutable",
+                        "recommendation": "If this variable is only set in the constructor, mark it as 'immutable' to save ~2100 gas per access.",
+                        "gas_saved_est": 2100
+                    })
+                    total_gas_saved += 2100
+
+            # 6. Unchecked arithmetic opportunities
+            if re.search(r'\b(i\s*\+\+|i\s*\+=\s*1)\b', line) and 'unchecked' not in line:
+                if 'for' not in line:  # Skip loop counters already caught
+                    self.gas_findings.append({
+                        "line": line_num,
+                        "issue": "Safe arithmetic without unchecked block",
+                        "recommendation": "Wrap safe increment operations in 'unchecked {}' block to save ~120 gas (Solidity >=0.8.0).",
+                        "gas_saved_est": 120
+                    })
+                    total_gas_saved += 120
+
         return {
             "status": "success",
             "findings_count": len(self.gas_findings),

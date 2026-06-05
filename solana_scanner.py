@@ -29,7 +29,8 @@ class SolanaScanner:
                 ["cargo", "audit", "--json"],
                 cwd=self.workspace,
                 capture_output=True,
-                text=True
+                text=True,
+                timeout=120  # 2 minutes max
             )
             
             # Simple check
