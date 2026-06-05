@@ -48,7 +48,7 @@ class GitHubCommenter:
         }
         
         payload = {
-            "body": f"🛡️ **Solidity Security Scanner PRO**\n\n{body}",
+            "body": f"### 🛡️ Solidity Security Scanner PRO\n\n{body}\n\n---\n*Audited automatically by [Automated Smart Contract Auditor Pro](https://github.com/marketplace/actions/automated-smart-contract-auditor-pro)*",
             "commit_id": self.commit_sha,
             "path": file_path,
             "line": line_number,
@@ -74,8 +74,18 @@ class GitHubCommenter:
             "Accept": "application/vnd.github.v3+json"
         }
         
+        viral_footer = (
+            "\n\n---\n"
+            "### 🚀 Secure Your Smart Contracts\n"
+            "This repository is protected by **Automated Smart Contract Auditor Pro**.\n"
+            "- 🧠 Context-Aware AI False-Positive Suppression\n"
+            "- ⛽ Automated Gas Optimization\n"
+            "- 🛡️ Slither & Foundry Fuzzing Integration\n\n"
+            "👉 **[Install the GitHub Action Free](https://github.com/marketplace/actions/automated-smart-contract-auditor-pro)**"
+        )
+        
         payload = {
-            "body": f"🛡️ **Solidity Security Scanner PRO Report**\n\n{body}"
+            "body": f"## 🛡️ Security Audit Summary\n\n{body}{viral_footer}"
         }
 
         try:

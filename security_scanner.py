@@ -828,8 +828,8 @@ def scan_contract(contract_address: str, workspace_override: str = None) -> None
             
     else:
         output["ai_validation"] = "🔒 AI Validation & Gas Optimization are locked."
-        output["payment_link"] = "Send 50 USDC to 0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5"
-        output["wallet_required"] = "Set WALLET_ADDRESS in Action inputs to verify your subscription."
+        output["payment_link"] = "Deposit a minimum of 20 USDC to 0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5 for Metered x402 Scanning"
+        output["wallet_required"] = "Set WALLET_ADDRESS in Action inputs to verify your deposit."
         
     sys.stdout.write(json.dumps(output) + "\n")
     sys.stdout.flush()
@@ -851,7 +851,7 @@ def scan_contract(contract_address: str, workspace_override: str = None) -> None
                 
                 f.write(f"### 🤖 AI Validation & Gas Optimizer (PRO)\n")
                 if has_pro:
-                    f.write(f"✅ **Superfluid/x402 Subscription Verified.** AI Validator successfully executed.\n")
+                    f.write(f"✅ **Superfluid/x402 Metered Deposit Verified.** AI Validator successfully executed.\n")
                     f.write(f"*(Check detailed JSON artifacts for in-depth AI context and false-positive suppression data).*\n\n")
                     
                     gas_data = output.get("gas_optimization", {})
@@ -863,8 +863,8 @@ def scan_contract(contract_address: str, workspace_override: str = None) -> None
                             f.write(f"  - `Line {find['line']}`: {find['issue']} -> *{find['recommendation']}*\n")
                 else:
                     f.write(f"🔒 **AI Validation & Gas Optimization Locked**\n")
-                    f.write(f"> Unlock the full power of Deep AI Audits and AST Gas Optimization to save thousands on deployment costs.\n")
-                    f.write(f"> Send **50 USDC** on the Base or Ethereum network to `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5` and add your wallet address to this Action's inputs.\n")
+                    f.write(f"> Unlock the full power of Deep AI Audits and AST Gas Optimization with metered billing.\n")
+                    f.write(f"> Deposit a minimum of **20 USDC** on the Base or Ethereum network to `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5` and add your wallet address to this Action's inputs.\n")
         except Exception as e:
             _log("ERROR", f"Failed to write GitHub Step Summary: {e}")
 
@@ -904,7 +904,7 @@ def scan_contract(contract_address: str, workspace_override: str = None) -> None
             summary_body += f"- Critical: {merged_counts.get('Critical', 0)}\n"
             summary_body += f"- High: {merged_counts.get('High', 0)}\n"
             if not has_pro:
-                summary_body += "\n🔒 **Unlock AI False-Positive Suppression & Gas Optimizer** by sending 50 USDC to `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5`."
+                summary_body += "\n🔒 **Unlock AI False-Positive Suppression & Gas Optimizer** by depositing 20 USDC to `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5`."
             commenter.post_general_comment(summary_body)
             
     except Exception as e:

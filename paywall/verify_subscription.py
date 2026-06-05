@@ -9,10 +9,10 @@ import requests
 # The wallet where you receive subscriptions
 OWNER_WALLET = "0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5".lower()
 
-# Required payment amount: 50 USDC (USDC has 6 decimals, so 50 * 10^6)
-REQUIRED_AMOUNT = 50 * (10**6)
+# Required minimum deposit for metered x402 billing: 20 USDC (USDC has 6 decimals, so 20 * 10^6)
+REQUIRED_AMOUNT = 20 * (10**6)
 
-# Subscription duration in seconds (30 days)
+# Deposit validity duration (for prototype simplicity, deposit lasts 30 days of metered use)
 SUBSCRIPTION_DURATION = 30 * 24 * 60 * 60
 
 # We support Ethereum (Mainnet) and Base
@@ -31,8 +31,8 @@ NETWORKS = {
 
 def verify_subscription(user_wallet: str, rpc_url: str = "https://mainnet.base.org") -> bool:
     """
-    Verifies if `user_wallet` has sent at least `REQUIRED_AMOUNT` of USDC
-    to `OWNER_WALLET` within the last 30 days on either Ethereum or Base.
+    Verifies if `user_wallet` has deposited at least `REQUIRED_AMOUNT` of USDC
+    to `OWNER_WALLET` for Metered x402 Billing.
     """
     if not user_wallet:
         print("[PAYWALL] ❌ No wallet address provided. Access to AI Validation PRO denied.")
@@ -47,7 +47,7 @@ def verify_subscription(user_wallet: str, rpc_url: str = "https://mainnet.base.o
             print(f"[PAYWALL] ⚠️ Warning: No API key found for {network_name} ({config['env_key']}). Skipping network.")
             continue
             
-        print(f"[PAYWALL] 🔍 Checking {network_name.capitalize()} for subscription payments...")
+        print(f"[PAYWALL] 🔍 Checking {network_name.capitalize()} for x402 metered deposits...")
         
         # Query ERC20 Token Transfers for the User's Wallet
         params = {
@@ -78,9 +78,9 @@ def verify_subscription(user_wallet: str, rpc_url: str = "https://mainnet.base.o
                         tx_time = int(tx.get("timeStamp", 0))
                         
                         if value >= REQUIRED_AMOUNT and (current_time - tx_time) <= SUBSCRIPTION_DURATION:
-                            print(f"[PAYWALL] ✅ VALID SUBSCRIPTION FOUND on {network_name.capitalize()}!")
+                            print(f"[PAYWALL] ✅ VALID x402 DEPOSIT FOUND on {network_name.capitalize()}!")
                             print(f"          Tx Hash: {tx.get('hash')}")
-                            print(f"          Amount: {value / 10**6} USDC")
+                            print(f"          Amount: {value / 10**6} USDC deposited")
                             return True
         except Exception as e:
             print(f"[PAYWALL] ❌ API Error on {network_name}: {e}")
@@ -100,13 +100,13 @@ def verify_subscription(user_wallet: str, rpc_url: str = "https://mainnet.base.o
         sf_res = requests.post(superfluid_subgraph, json={"query": query, "variables": {"receiver": OWNER_WALLET, "sender": user_wallet}}, timeout=5)
         sf_data = sf_res.json()
         if sf_data.get("data", {}).get("streams"):
-            print(f"[PAYWALL] ✅ SUPERFLUID STREAM DETECTED! Active continuous subscription found.")
+            print(f"[PAYWALL] ✅ SUPERFLUID STREAM DETECTED! Active metered subscription found.")
             return True
     except Exception as e:
         print(f"[PAYWALL] ⚠️ Superfluid verification skipped: {e}")
 
-    print(f"[PAYWALL] 🚫 No active subscription or continuous stream found for {user_wallet}.")
-    print(f"[PAYWALL] Please send 50 USDC to {OWNER_WALLET} on Base or Ethereum.")
+    print(f"[PAYWALL] 🚫 No active deposit or continuous stream found for {user_wallet}.")
+    print(f"[PAYWALL] Please deposit at least 20 USDC to {OWNER_WALLET} to enable metered scanning.")
     return False
 
 if __name__ == "__main__":

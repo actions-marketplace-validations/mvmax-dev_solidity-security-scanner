@@ -51,13 +51,16 @@
 | **False-Positive Suppression (99%)** | ❌ | ✅ | ✅ |
 | **AST Gas Optimization Engine** | ❌ | ✅ | ✅ |
 | **Reentrancy & Flash Loan Defense** | ❌ | ✅ | ✅ |
-| **Payment** | Free Forever | 50 USDC (Crypto) | Fiat / Stripe |
+| **Payment** | Free Forever | Metered x402 (USDC) | Fiat / Stripe |
 
 ---
 
-## 🚀 Quick Start — 3 Steps
+## 🚀 Quick Start & Configuration Templates
 
-**Step 1:** Create `.github/workflows/audit.yml` in your repo:
+Drop one of these templates into `.github/workflows/audit.yml` in your repository.
+
+### Template A: Standard Setup (Free)
+Best for open-source projects wanting basic AST structural analysis without AI/Gas features.
 
 ```yaml
 name: "Web3 Security Audit"
@@ -69,7 +72,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Optional: Cache for 10x faster scans
+      - name: Run Security Scanner
+        uses: mvmax-dev/solidity-security-scanner@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### Template B: Enterprise PRO (Metered / SaaS)
+Unlocks the AI Validator, False-Positive Suppression, and Gas Optimization.
+
+```yaml
+name: "Web3 Security Audit PRO"
+on: [pull_request]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
       - uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
@@ -78,17 +99,14 @@ jobs:
       - name: Run Security Scanner PRO
         uses: mvmax-dev/solidity-security-scanner@main
         with:
-          wallet_address: "0xYourWalletAddress"        # PRO: Web3 billing
-          enterprise_key: ${{ secrets.SCANNER_KEY }}    # PRO: Enterprise billing
-          github_token: ${{ secrets.GITHUB_TOKEN }}     # For inline PR comments
+          wallet_address: "0xYourWalletAddress"        # Required for Web3 Metered billing
+          enterprise_key: ${{ secrets.SCANNER_KEY }}    # Required for Stripe billing
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          fuzz_runs: "512"                              # Optional: increase Foundry fuzzing depth
         env:
           ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
           BASESCAN_API_KEY: ${{ secrets.BASESCAN_API_KEY }}
 ```
-
-**Step 2:** Push a Pull Request with Solidity or Rust contracts.
-
-**Step 3:** The scanner automatically posts inline comments on vulnerable lines. ✅
 
 ---
 
@@ -150,13 +168,16 @@ When the scanner runs on your PR, it produces a **JSON report** and posts **inli
 
 **Inline PR Comment Example:**
 
-> 🛡️ **Solidity Security Scanner PRO**
+> ### 🛡️ Solidity Security Scanner PRO
 >
 > **[Critical] Reentrancy Vulnerability**
 > External call to `msg.sender` before state update on line 47.
 > Attacker can re-enter `withdraw()` and drain all funds.
 > 
 > 💡 **Fix:** Apply Checks-Effects-Interactions pattern or add `nonReentrant` modifier.
+>
+> ---
+> *Audited automatically by [Automated Smart Contract Auditor Pro](https://github.com/marketplace/actions/automated-smart-contract-auditor-pro)*
 
 ---
 
@@ -170,7 +191,7 @@ When the scanner runs on your PR, it produces a **JSON report** and posts **inli
               ▼
 ┌─────────────────────────────┐    ┌─────────────────────────────┐
 │   Language Detection        │    │   Paywall Verification      │
-│   ├── Solidity (.sol)       │    │   ├── Web3 USDC Check       │
+│   ├── Solidity (.sol)       │    │   ├── Web3 Metered Check    │
 │   ├── Rust/Anchor (.rs)     │    │   └── Enterprise Key Check  │
 │   └── Foundry (foundry.toml)│    └─────────────────────────────┘
 └─────────────┬───────────────┘
@@ -211,23 +232,23 @@ When the scanner runs on your PR, it produces a **JSON report** and posts **inli
 
 ---
 
-## 💎 PRO Version: Hybrid SaaS Paywall
+## 💎 PRO Version: Metered x402 Billing
 
-The basic structural analysis is **100% free forever**. PRO unlocks AI Validation & Gas Optimization.
+The basic structural analysis is **100% free forever**. PRO unlocks AI Validation & Gas Optimization through our Web3 Metered Treasury.
 
 <table>
 <tr>
 <td width="50%">
 
 ### 🔷 Option A: Web3 Indie
-**For individual developers & hackers**
+**Pay-Per-Scan / Superfluid Streams**
 
-1. Send **50 USDC** on Ethereum or Base to:
+1. Deposit **20 USDC** (minimum) on Ethereum or Base to:
    ```
    0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5
    ```
 2. Add your wallet to `wallet_address` input
-3. AI features unlock automatically ✅
+3. AI features unlock automatically, metered per PR scan ✅
 
 </td>
 <td width="50%">

@@ -27,12 +27,43 @@ inputs:
     required: false
     default: ''
 
+  fuzz_runs:
+    description: 'Number of fuzz runs for Foundry'
+    required: false
+    default: '256'
+
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  args:
-    - ${{ inputs.contract_address }}
-    - ${{ inputs.wallet_address }}
-    - ${{ inputs.rpc_url }}
-    - ${{ inputs.github_token }}
-    - ${{ inputs.enterprise_key }}
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install Slither & Solc
+      shell: bash
+      run: |
+        pip install --upgrade pip
+        pip install slither-analyzer solc-select requests web3 eth-account
+        solc-select install 0.8.24
+        solc-select use 0.8.24
+
+    - name: Install Foundry
+      uses: foundry-rs/foundry-toolchain@v1
+
+    - name: Run Solidity Security Scanner PRO
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        WORKSPACE: ${{ github.workspace }}
+        FUZZ_RUNS: ${{ inputs.fuzz_runs }}
+        WALLET_ADDRESS: ${{ inputs.wallet_address }}
+        ENTERPRISE_KEY: ${{ inputs.enterprise_key }}
+      run: |
+        python ${{ github.action_path }}/security_scanner.py \
+          "${{ inputs.contract_address }}" \
+          "${{ inputs.wallet_address }}" \
+          "${{ inputs.rpc_url }}" \
+          "${{ inputs.github_token }}" \
+          "${{ inputs.enterprise_key }}"
