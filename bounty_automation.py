@@ -226,86 +226,49 @@ class ContractAnalyzer:
 
         return {"address": address, "verified": False}
 
-    def quick_scan(self, source_code: str) -> list:
-        """Run quick heuristic vulnerability scan on source code."""
+    def quick_scan(self, source_code: str, address: str) -> list:
+        """Run advanced security scanner on downloaded source code."""
         findings = []
         if not source_code:
             return findings
 
-        # Reentrancy patterns
-        if re.search(r"\.call\{value:", source_code) and not re.search(
-            r"ReentrancyGuard|nonReentrant|_locked", source_code
-        ):
-            findings.append({
-                "type": "reentrancy",
-                "severity": "high",
-                "description": "External call with value transfer without reentrancy guard",
-            })
-
-        # Unchecked return values
-        if re.search(r"\.call\(", source_code) and not re.search(
-            r"\(bool\s+success", source_code
-        ):
-            findings.append({
-                "type": "unchecked_call",
-                "severity": "medium",
-                "description": "External call without checking return value",
-            })
-
-        # tx.origin usage
-        if re.search(r"tx\.origin", source_code):
-            findings.append({
-                "type": "tx_origin",
-                "severity": "medium",
-                "description": "Use of tx.origin for authorization (phishing risk)",
-            })
-
-        # Unprotected selfdestruct
-        if re.search(r"selfdestruct\(", source_code) and not re.search(
-            r"onlyOwner|onlyAdmin|require\(msg\.sender", source_code[:source_code.find("selfdestruct")]
-        ):
-            findings.append({
-                "type": "unprotected_selfdestruct",
-                "severity": "critical",
-                "description": "Potentially unprotected selfdestruct function",
-            })
-
-        # Delegatecall to user input
-        if re.search(r"delegatecall\(", source_code):
-            findings.append({
-                "type": "delegatecall",
-                "severity": "high",
-                "description": "Use of delegatecall (potential proxy hijack)",
-            })
-
-        # Oracle manipulation
-        if re.search(r"getReserves|slot0|latestAnswer", source_code):
-            if not re.search(r"TWAP|twap|timeWeighted", source_code):
+        _log("BOUNTY", f"  Invoking AST Security Scanner for {address}...")
+        
+        # Write source code to a temporary file
+        temp_dir = os.path.join(DATA_DIR, "temp_scan")
+        os.makedirs(temp_dir, exist_ok=True)
+        temp_file = os.path.join(temp_dir, f"{address}.sol")
+        
+        with open(temp_file, "w", encoding="utf-8") as f:
+            f.write(source_code)
+            
+        try:
+            # Dynamically import the core scanner
+            import security_scanner
+            from security_scanner import SolidityHeuristicScanner
+            
+            scanner = SolidityHeuristicScanner()
+            ast_findings = scanner.scan_file(temp_file)
+            
+            for finding in ast_findings:
+                # Convert finding to bounty-compatible dictionary format
+                severity_val = finding.severity.value if hasattr(finding.severity, 'value') else str(finding.severity)
+                
                 findings.append({
-                    "type": "oracle_manipulation",
-                    "severity": "high",
-                    "description": "Direct price feed without TWAP protection",
+                    "type": finding.name.lower().replace(" ", "_"),
+                    "name": finding.name,
+                    "severity": severity_val.lower(),
+                    "description": finding.description,
+                    "filepath": finding.filepath,
+                    "line_number": finding.line_number
                 })
-
-        # Flash loan vectors
-        if re.search(r"flashLoan|flashloan|flash", source_code, re.IGNORECASE):
-            findings.append({
-                "type": "flash_loan_vector",
-                "severity": "medium",
-                "description": "Flash loan interaction detected — check for price manipulation",
-            })
-
-        # Missing access control
-        pub_fns = re.findall(r"function\s+\w+[^}]+public[^}]+\{", source_code)
-        for fn in pub_fns:
-            if re.search(r"transfer|withdraw|mint|burn|set|update", fn, re.IGNORECASE):
-                if not re.search(r"onlyOwner|onlyRole|require\(", fn):
-                    findings.append({
-                        "type": "missing_access_control",
-                        "severity": "high",
-                        "description": "Privileged public function without access control",
-                    })
-                    break
+                
+        except Exception as e:
+            _log("BOUNTY", f"  [ERROR] Advanced scan failed for {address}: {e}")
+            
+        # Clean up temp file
+        if os.path.exists(temp_file):
+            os.remove(temp_file)
 
         return findings
 
@@ -326,7 +289,7 @@ class ReportCompiler:
 
 **Platform:** {program.get('platform', 'N/A')}
 **Severity:** {severity}
-**Category:** {finding.get('type', 'Unknown')}
+**Category:** {finding.get('name', 'Unknown')}
 **Date:** {now.strftime('%Y-%m-%d')}
 **Reporter:** Maxwell VOSS Sovereign Security Intelligence
 
@@ -334,6 +297,7 @@ class ReportCompiler:
 
 ## Summary
 
+The Advanced AST Security Scanner detected the following issue in the target contract:
 {finding.get('description', 'N/A')}
 
 ## Affected Contract
@@ -345,33 +309,37 @@ class ReportCompiler:
 ## Vulnerability Details
 
 ### Type
-{finding.get('type', 'N/A').replace('_', ' ').title()}
+{finding.get('name', 'N/A').title()}
 
 ### Description
 {finding.get('description', 'No description available.')}
 
+### Location
+- **File:** `{finding.get('filepath', 'Unknown')}`
+- **Line:** `{finding.get('line_number', 'Unknown')}`
+
 ### Impact
 This vulnerability could potentially allow an attacker to:
-- Exploit {finding.get('type', 'the identified pattern')} in the contract
-- Impact funds managed by the protocol
-- Severity classified as **{severity}** based on CVSS-style assessment
+- Exploit {finding.get('name', 'the identified pattern')} in the contract.
+- Impact funds or operations managed by the protocol.
+- Severity classified as **{severity}** based on Deep AST analysis.
 
 ## Proof of Concept (Outline)
 
 ```solidity
 // PoC outline — detailed PoC available upon request
 // Step 1: Deploy attacker contract
-// Step 2: Interact with vulnerable function
+// Step 2: Interact with vulnerable function on line {finding.get('line_number', 'Unknown')}
 // Step 3: Demonstrate exploit path
 ```
 
 ## Recommendation
 
-Based on the vulnerability type ({finding.get('type', 'N/A')}):
-1. Implement appropriate guard patterns
-2. Add access control modifiers where missing
-3. Follow Checks-Effects-Interactions pattern
-4. Consider OpenZeppelin's security libraries
+Based on the vulnerability type ({finding.get('name', 'N/A')}):
+1. Review the logic on line {finding.get('line_number', 'Unknown')}.
+2. Implement appropriate guard patterns (e.g., Checks-Effects-Interactions).
+3. Add necessary access control modifiers.
+4. Validate inputs thoroughly.
 
 ---
 
@@ -531,7 +499,7 @@ class BountyPipeline:
             _log("BOUNTY", f"  [SKIP] {address} — not verified")
             return []
 
-        findings = self.analyzer.quick_scan(source.get("source", ""))
+        findings = self.analyzer.quick_scan(source.get("source", ""), address)
         _log("BOUNTY", f"  {address}: {len(findings)} findings")
 
         # Generate reports for significant findings

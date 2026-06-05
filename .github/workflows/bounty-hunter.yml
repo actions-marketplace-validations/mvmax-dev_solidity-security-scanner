@@ -1,0 +1,56 @@
+name: Bounty Hunter Automation
+
+on:
+  schedule:
+    # Run once a day at 2:00 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  bounty-hunt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install requests aiohttp
+
+      - name: Execute Bounty Hunter Bot
+        env:
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+          BASESCAN_API_KEY: ${{ secrets.BASESCAN_API_KEY }}
+        run: |
+          # Create a dummy OPENCLAW_WORKSPACE since the scanner relies on it
+          mkdir -p ~/.openclaw/workspace/data/bounty_submissions
+          export OPENCLAW_WORKSPACE=~/.openclaw/workspace
+          
+          # Run the full cycle
+          python bounty_automation.py full-cycle
+          
+      - name: Commit Bounty Reports
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Only add if there are new reports
+          if [ -d "~/.openclaw/workspace/data/bounty_submissions" ]; then
+            mkdir -p data/bounty_submissions
+            cp -r ~/.openclaw/workspace/data/bounty_submissions/* data/bounty_submissions/ || true
+            git add data/bounty_submissions/
+            git add data/bounty_scan_results.json || true
+            git add data/bounty_tracker.json || true
+            
+            git commit -m "chore: Auto-generated bounty reports [skip ci]" || echo "No new vulnerabilities found"
+            git push
+          fi
