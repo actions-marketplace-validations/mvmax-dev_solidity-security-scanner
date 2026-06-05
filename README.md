@@ -92,6 +92,74 @@ jobs:
 
 ---
 
+## 📸 Sample Output
+
+When the scanner runs on your PR, it produces a **JSON report** and posts **inline comments** directly on vulnerable lines:
+
+<details>
+<summary><strong>🔍 Click to see example scan output</strong></summary>
+
+```json
+{
+  "scan_result": {
+    "total_findings": 3,
+    "severity_counts": {
+      "Critical": 1,
+      "High": 1,
+      "Medium": 1
+    },
+    "risk_score": 82,
+    "findings": [
+      {
+        "rule_id": "REENTRANCY-001",
+        "name": "Reentrancy Vulnerability",
+        "severity": "Critical",
+        "description": "External call to msg.sender before state update. Attacker can re-enter withdraw() and drain funds.",
+        "filepath": "contracts/Vault.sol",
+        "line_number": 47,
+        "recommendation": "Apply Checks-Effects-Interactions pattern or use ReentrancyGuard."
+      },
+      {
+        "rule_id": "ACCESS-003",
+        "name": "Unprotected Selfdestruct",
+        "severity": "High",
+        "description": "selfdestruct() callable without onlyOwner modifier. Any address can destroy this contract.",
+        "filepath": "contracts/Vault.sol",
+        "line_number": 82,
+        "recommendation": "Add 'onlyOwner' modifier or remove selfdestruct entirely."
+      },
+      {
+        "rule_id": "GAS-001",
+        "name": "Uncached Array Length in Loop",
+        "severity": "Medium",
+        "description": "Array .length accessed in loop condition. Wastes ~100 gas per iteration.",
+        "filepath": "contracts/Vault.sol",
+        "line_number": 31,
+        "recommendation": "Cache array length: uint256 len = arr.length;"
+      }
+    ],
+    "gas_optimization": {
+      "estimated_savings": "100 - 1000 Gas",
+      "findings_count": 1
+    }
+  }
+}
+```
+
+</details>
+
+**Inline PR Comment Example:**
+
+> 🛡️ **Solidity Security Scanner PRO**
+>
+> **[Critical] Reentrancy Vulnerability**
+> External call to `msg.sender` before state update on line 47.
+> Attacker can re-enter `withdraw()` and drain all funds.
+> 
+> 💡 **Fix:** Apply Checks-Effects-Interactions pattern or add `nonReentrant` modifier.
+
+---
+
 ## 🏗️ Architecture
 
 ```

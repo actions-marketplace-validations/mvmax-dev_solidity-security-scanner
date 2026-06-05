@@ -1,5 +1,5 @@
 name: 'Automated Smart Contract Auditor Pro'
-description: 'AI-powered smart contract scanner with Web3 validation logic to secure DeFi/Web3 PRs.'
+description: 'AI-powered Solidity & Rust security scanner. Detects reentrancy, flash loans, MEV, gas waste. Inline PR comments. Slither + Foundry + Solana. Free tier available.'
 author: 'Maxwell VOSS'
 branding:
   icon: 'zap'
