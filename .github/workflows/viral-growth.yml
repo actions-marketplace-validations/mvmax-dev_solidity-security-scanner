@@ -1,0 +1,42 @@
+name: Automated Viral Growth Engine
+
+on:
+  schedule:
+    # Run twice a day (e.g., 00:00 and 12:00 UTC)
+    - cron: '0 0,12 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  growth-hack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install requests
+
+      - name: Execute Viral Growth Bot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python viral_growth_bot.py --language solidity --max 2
+          
+      - name: Commit Targeted Repos Tracker
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add targeted_repos.json
+          git commit -m "chore: Update targeted repos database [skip ci]" || echo "No changes to commit"
+          git push
